@@ -1,7 +1,8 @@
 import ssl, certifi
 ssl._create_default_https_context = lambda *args, **kwargs: ssl.create_default_context(cafile=certifi.where())
 import flask
-import slack
+import slack_sdk
+from slack_sdk import WebClient
 import os
 import pathlib
 from pathlib import Path
@@ -13,7 +14,7 @@ env_path = Path('..') / '.env'
 load_dotenv(dotenv_path=env_path)
 app = flask.Flask(__name__)
 slack_event_adapter = SlackEventAdapter(os.getenv("SIGNING_TOKEN"), '/slack/events', app)
-client = slack.WebClient(token=os.getenv("SLACK_TOKEN"))
+client = WebClient(token=os.getenv("SLACK_TOKEN"))
 
 client.chat_postMessage(channel="#a-space-mans-journey", text="Good morning yall!")
 
