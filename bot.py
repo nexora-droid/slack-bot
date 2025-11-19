@@ -18,4 +18,5 @@ client = slack.WebClient(token=os.getenv("SLACK_TOKEN"))
 client.chat_postMessage(channel="#a-space-mans-journey", text="Good morning yall!")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run("0.0.0.0", port=port)
