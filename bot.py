@@ -1,6 +1,8 @@
+import json
 import ssl, certifi
 ssl._create_default_https_context = lambda *args, **kwargs: ssl.create_default_context(cafile=certifi.where())
 import flask
+from flask import request, make_response
 import slack_sdk
 from slack_sdk import WebClient
 import os
@@ -18,6 +20,12 @@ client = WebClient(token=os.getenv("SLACK_TOKEN"))
 
 client.chat_postMessage(channel="#a-space-mans-journey", text="Good morning yall!")
 
+@app.route("/slack/events", methods=['POST'])
+def slack_events():
+    data = request.get_json()
+    if "challenge" in data:
+        return make_response(data["challenge"], 200, {"content_type": "text/plain"})
+    return make_response("OK", 200)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run("0.0.0.0", port=port)
